@@ -67,7 +67,7 @@ histdb-skim-widget() {
   zle redisplay
 }
 
-histdb-skim-ensure
+# histdb-skim-ensure
 
 zle     -N   histdb-skim-widget
 bindkey '^R' histdb-skim-widget

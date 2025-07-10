@@ -103,16 +103,13 @@ fn show_history(thequery: String) -> Result<String, String> {
             .query(Some(&query))
             .color(Some(&color_options))
             .bind(vec![
-                "f1:abort",
-                "f2:abort",
-                "f3:abort",
-                "f4:abort",
-                "f5:abort",
-                "f6:abort",
-                "f7:abort",
-                "ctrl-r:abort",
-                "ctrl-u:half-page-up",
-                "ctrl-d:half-page-down",
+                "[:abort",
+                "?:toggle-preview",
+                "ctrl-g:abort",
+                "ctrl-s:abort",
+                "ctrl-d:abort",
+                "ctrl-b:half-page-up",
+                "ctrl-f:half-page-down",
             ])
             .header(Some(&title))
             .preview(Some("")) // preview should be specified to enable preview window
@@ -149,7 +146,7 @@ fn process_result(
     if selected_items.is_some() {
         let sel = selected_items.as_ref().unwrap();
         match sel.final_key {
-            Key::ESC | Key::Ctrl('c') | Key::Ctrl('d') | Key::Ctrl('z') => {
+            Key::ESC | Key::Ctrl('c') | Key::Ctrl('z') => {
                 return SelectionResult {
                     selected_cmd: None,
                     abort: true,
@@ -166,22 +163,10 @@ fn process_result(
                     abort: false,
                 };
             }
-            Key::F(1) => {
-                *loc = Location::Session;
-            }
-            Key::F(2) => {
-                *loc = Location::Directory;
-            }
-            Key::F(3) => {
-                *loc = Location::Machine;
-            }
-            Key::F(4) => {
-                *loc = Location::Everywhere;
-            }
-            Key::F(5) => {
+            Key::Ctrl('g') => {
                 *grouped = !*grouped;
             }
-            Key::F(6) => {
+            Key::Ctrl('s') => {
                 if get_focus_session().is_none() {
                     focus_session(
                         &((*sel.selected_items[0]).as_any().downcast_ref::<History>())
@@ -192,7 +177,7 @@ fn process_result(
                     reset_focus_session();
                 }
             }
-            Key::F(7) => {
+            Key::Ctrl('d') => {
                 if get_focus_dir().is_none() {
                     focus_dir(
                         &((*sel.selected_items[0]).as_any().downcast_ref::<History>())
@@ -203,7 +188,7 @@ fn process_result(
                     reset_focus_dir();
                 }
             }
-            Key::Ctrl('r') => {
+            Key::Char('[') => {
                 *loc = match *loc {
                     Location::Session => Location::Directory,
                     Location::Directory => Location::Machine,

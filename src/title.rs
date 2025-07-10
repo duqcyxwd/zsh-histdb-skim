@@ -32,23 +32,23 @@ pub fn generate_title(location: &Location) -> String {
 
     let header_map = enum_map! {
         Location::Session =>
-" ┏━━━━━━━━━━━┱─────────────┬────────┬──────────────┐
- ┃F1: Session┃F2: Directory│F3: Host│F4: Everywhere│ F5: Toggle group, F6: Lock Session, F7: Lock Dir
-━┛           ┗━━━━━━━━━━━━━┷━━━━━━━━┷━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+" ┏━━━━━━━━━┱───────────┬──────┬────────────┐
+ ┃ Session ┃ Directory │ Host │ Everywhere │ C-g: Toggle group, C-s: Lock Session, C-d: Lock Dir
+━┛         ┗━━━━━━━━━━━┷━━━━━━┷━━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
         Location::Directory =>
-" ┌───────────┲━━━━━━━━━━━━━┱────────┬──────────────┐
- │F1: Session┃F2: Directory┃F3: Host│F4: Everywhere│ F5: Toggle group, F6: Lock Session, F7: Lock Dir
-━┷━━━━━━━━━━━┛             ┗━━━━━━━━┷━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+" ┌─────────┲━━━━━━━━━━━┱──────┬────────────┐
+ │ Session ┃ Directory ┃ Host │ Everywhere │ C-g: Toggle group, C-s: Lock Session, C-d: Lock Dir
+━┷━━━━━━━━━┛           ┗━━━━━━┷━━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
 
         Location::Machine =>
-" ┌───────────┬─────────────┲━━━━━━━━┱──────────────┐
- │F1: Session│F2: Directory┃F3: Host┃F4: Everywhere│ F5: Toggle group, F6: Lock Session, F7: Lock Dir
-━┷━━━━━━━━━━━┷━━━━━━━━━━━━━┛        ┗━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+" ┌─────────┲━━━━━━━━━━━┱──────┬────────────┐
+ │ Session ┃ Directory ┃ Host ┃ Everywhere │ C-g: Toggle group, C-s: Lock Session, C-d: Lock Dir
+━┷━━━━━━━━━┷━━━━━━━━━━━┛      ┗━━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
 
         Location::Everywhere =>
-" ┌───────────┬─────────────┬────────┲━━━━━━━━━━━━━━┓
- │F1: Session│F2: Directory│F3: Host┃F4: Everywhere┃ F5: Toggle group, F6: Lock Session, F7: Lock Dir
-━┷━━━━━━━━━━━┷━━━━━━━━━━━━━┷━━━━━━━━┛              ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+" ┌─────────┲━━━━━━━━━━━┱──────┬────────────┐
+ │ Session ┃ Directory ┃ Host ┃ Everywhere ┃ C-g: Toggle group, C-s: Lock Session, C-d: Lock Dir
+━┷━━━━━━━━━┷━━━━━━━━━━━┷━━━━━━┛            ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
     };
 
     let title = format!(
