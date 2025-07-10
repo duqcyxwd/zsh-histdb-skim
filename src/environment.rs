@@ -78,3 +78,9 @@ pub fn get_color() -> String {
     let color = env::var("HISTDB_COLOR").unwrap_or(String::from("auto"));
     return color.to_string();
 }
+
+/// Get the bat command for syntax highlighting in preview
+pub fn get_bat_command() -> String {
+    let bat_cmd = env::var("HISTDB_BAT_COMMAND").unwrap_or(String::from("bat --color=always --plain --language=bash"));
+    return bat_cmd.to_string();
+}

@@ -3,9 +3,10 @@ use crate::environment::*;
 use chrono::{DateTime, Local, TimeZone};
 use humantime::format_duration;
 use skim::prelude::*;
+use std::io::{BufWriter, Write};
+use std::process::Command;
 use std::time::Duration;
 use std::time::SystemTime;
-use textwrap::fill;
 
 fn get_epoch_start_of_day() -> u64 {
     let now = SystemTime::now();
@@ -77,6 +78,45 @@ impl History {
             History::format_or_none(self.duration)
         }
     }
+
+    fn highlight_command(&self) -> String {
+        let bat_cmd = get_bat_command();
+        let bat_args: Vec<&str> = bat_cmd.split_whitespace().collect();
+        
+        if bat_args.is_empty() {
+            return self.cmd.clone();
+        }
+        
+        let cmd_name = bat_args[0];
+        let args = &bat_args[1..];
+        
+        match Command::new(cmd_name)
+            .args(args)
+            .arg("--")
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::null())
+            .spawn()
+        {
+            Ok(mut child) => {
+                if let Some(stdin) = child.stdin.take() {
+                    let _ = BufWriter::new(stdin).write_all(self.cmd.as_bytes());
+                }
+                
+                match child.wait_with_output() {
+                    Ok(output) => {
+                        if output.status.success() {
+                            String::from_utf8_lossy(&output.stdout).to_string()
+                        } else {
+                            self.cmd.clone()
+                        }
+                    }
+                    Err(_) => self.cmd.clone()
+                }
+            }
+            Err(_) => self.cmd.clone()
+        }
+    }
 }
 
 impl SkimItem for History {
@@ -99,10 +139,13 @@ impl SkimItem for History {
         tformat("Exit Status", &History::format_or_none(self.exit_status));
         tformat("Session", &self.session.to_string());
         tformat("Start Time", &self.format_date(false));
-        information.push_str(&format!(
-            "\x1b[1mCommand\x1b[0m\n\n{}\n",
-            &fill(&self.cmd, _context.width)
-        ));
+        
+        // Use bat for syntax highlighting if available
+        information.push_str("\x1b[1mCommand\x1b[0m\n\n");
+        let highlighted_cmd = self.highlight_command();
+        information.push_str(&highlighted_cmd);
+        information.push('\n');
+        
         ItemPreview::AnsiText(information)
     }
 
