@@ -60,7 +60,7 @@ pub fn build_query_string(theloc: &Location, grouped: bool) -> String {
         _ => {}
     };
     if grouped {
-        query.push_str(" group by history.command_id, history.place_id");
+        query.push_str(" group by history.command_id");
     }
     query.push_str(" order by start desc");
     return query;
@@ -103,7 +103,7 @@ mod query {
 
     #[test]
     fn contains_grouping() {
-        let re_group = Regex::new(r"group by history.command_id, history.place_id").unwrap();
+        let re_group = Regex::new(r"group by history.command_id").unwrap();
         for l in vec![
             Location::Session,
             Location::Directory,
@@ -117,7 +117,7 @@ mod query {
 
     #[test]
     fn contains_no_grouping_if_disabled() {
-        let re_group = Regex::new(r"group by history.command_id, history.place_id").unwrap();
+        let re_group = Regex::new(r"group by history.command_id").unwrap();
         let re_only_group = Regex::new(r"group").unwrap();
         for l in vec![
             Location::Session,
@@ -136,7 +136,7 @@ mod query {
         let query = build_query_string(&Location::Session, true);
         let re_session = Regex::new(r"session == (\d*) and").unwrap();
         let re_host = Regex::new(r"host == '.*'").unwrap();
-        let re_group = Regex::new(r"group by history.command_id, history.place_id").unwrap();
+        let re_group = Regex::new(r"group by history.command_id").unwrap();
         assert!(re_session.is_match(&query));
         assert!(re_host.is_match(&query));
         assert!(re_group.is_match(&query));
@@ -146,7 +146,7 @@ mod query {
     fn for_directory() {
         let query = build_query_string(&Location::Directory, false);
         let re_directory = Regex::new(r"places.dir like '.*' and").unwrap();
-        let re_group = Regex::new(r"group by history.command_id, history.place_id").unwrap();
+        let re_group = Regex::new(r"group by history.command_id").unwrap();
         assert!(re_directory.is_match(&query));
         assert!(!re_group.is_match(&query));
     }
@@ -157,7 +157,7 @@ mod query {
         let re_session = Regex::new(r"session == (\d*) and").unwrap();
         let re_place = Regex::new(r"dir like '.*' and").unwrap();
         let re_host = Regex::new(r"host == '.*'").unwrap();
-        let re_group = Regex::new(r"group by history.command_id, history.place_id").unwrap();
+        let re_group = Regex::new(r"group by history.command_id").unwrap();
         assert!(!re_session.is_match(&query));
         assert!(!re_place.is_match(&query));
         assert!(re_host.is_match(&query));
@@ -169,7 +169,7 @@ mod query {
         let re_session = Regex::new(r"session == (\d*) and").unwrap();
         let re_place = Regex::new(r"dir like '.*' and").unwrap();
         let re_host = Regex::new(r"host == '.*'").unwrap();
-        let re_group = Regex::new(r"group by history.command_id, history.place_id").unwrap();
+        let re_group = Regex::new(r"group by history.command_id").unwrap();
         assert!(!re_session.is_match(&query));
         assert!(!re_place.is_match(&query));
         assert!(!re_host.is_match(&query));

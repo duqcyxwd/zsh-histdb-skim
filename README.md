@@ -44,10 +44,13 @@ By default the binary is downloaded
 
 ## Building
 
-```
+```bash
 cargo build --release
 mkdir -p bin
 mv target/release/zsh-histdb-skim bin
+
+# or
+./build.sh
 ```
 
 ## Environment Variables
